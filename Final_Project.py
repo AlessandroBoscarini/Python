@@ -9,6 +9,8 @@ import sklearn
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 import statsmodels.api as sm
+import plotly.express as px
+import pyautogui
 # %%
 st.markdown("<h1 style='text-align: center; color: black;'>Final Project</h1>", unsafe_allow_html=True)
 seriea_df = pd.read_excel("C:/Users/ASUS/Desktop/serieA.xlsx")
@@ -97,33 +99,6 @@ plt.show()
 st.write(fig)
 
 # %%
-juve_df = seriea[seriea['team']=='Juventus']
-column_x = ['gf',	'ga',	'xg',	'xga',	'poss_x',	'sh',	'sot',	'def 3rd',	'att 3rd',	'succ%',	'mis',	'rec%']
-column_y = []
-def sum_col_juve(list_of_variables, col_y):
-  for element in list_of_variables:
-    col_y.append(round(sum(juve_df[element])))
-  print(col_y)
-sum_col_juve(column_x, column_y)
-
-# %%
-fig, ax = plt.subplots(figsize=(6,6))
-x = column_x[0],column_x[2]
-x_1 = column_x[1],column_x[3]
-new_x = x + x_1
-y = column_y[0],column_y[2]
-y_1 = column_y[1],column_y[3]
-new_y = y + y_1
-my_cmap = plt.get_cmap("plasma")
-plt.bar(new_x, new_y, color = ['navy','mediumblue','lightskyblue','cornflowerblue' ])
-plt.bar_label(plt.bar(new_x, new_y, color = ['navy','mediumblue','lightskyblue','cornflowerblue' ]), labels=new_y, label_type='edge', padding=1)
-plt.title('Juventus Goals: Expectations Vs. Reality')
-plt.xlabel('statistics')
-plt.ylabel('count')
-plt.show()
-st.write(fig)
-
-# %%
 st.markdown("<h2 style='text-align: center; color: black;'>Model</h2>", unsafe_allow_html=True)
 cols = ['ga', 'poss_x', 'sot', 'def 3rd', 'att 3rd', 'succ%', 'mis', 'rec%' ]
 x = seriea[cols]
@@ -156,6 +131,7 @@ X_train_seriea, X_test_seriea, y_train_seriea, y_test_seriea = sklearn.model_sel
 logit_model=sm.MNLogit(y_train_seriea, sm.add_constant(X_train_seriea))
 result_3=logit_model.fit()
 
+
 # %%
 col1, col2, col3 = st.columns(3)
 
@@ -174,5 +150,72 @@ if button_2:
     st.write(result_2.summary())
 if button_3:
     st.write(result_3.summary())
+ 
+st.button('Reset')
+if button_1 == True:
+  button_1 = False
+elif button_2 == True:
+  button_2 = False
+elif button_3 == True:
+  button_3 = False
 
+# %%
+def sum_gf(list_of_variables, col_y):
+  for element in list_of_variables:
+    new_seriea = seriea[seriea['team']==element]
+    col_y.append(round(sum(new_seriea['gf'])))
+  print(col_y)
+list_of_gf = []
+sum_gf(list_of_teams, list_of_gf)
+
+def sum_xg(list_of_variables, col_y):
+  for element in list_of_variables:
+    new_seriea = seriea[seriea['team']==element]
+    col_y.append(round(sum(new_seriea['xg'])))
+  print(col_y)
+list_of_xg = []
+sum_xg(list_of_teams, list_of_xg)
+
+def sum_ga(list_of_variables, col_y):
+  for element in list_of_variables:
+    new_seriea = seriea[seriea['team']==element]
+    col_y.append(round(sum(new_seriea['ga'])))
+  print(col_y)
+list_of_ga = []
+sum_ga(list_of_teams, list_of_ga)
+
+def sum_xga(list_of_variables, col_y):
+  for element in list_of_variables:
+    new_seriea = seriea[seriea['team']==element]
+    col_y.append(round(sum(new_seriea['xga'])))
+  print(col_y)
+list_of_xga = []
+sum_xga(list_of_teams, list_of_xga)
+# %%
+data = {
+    'team': list_of_teams,
+    'gf': list_of_gf,
+    'xg': list_of_xg,
+    'ga': list_of_ga,
+    'xga': list_of_xga
+}
+df = pd.DataFrame(data)
+# %%
+list_of_var = ['gf','xg','ga','xga']
+
+sel_team = st.selectbox('**Select team**', df.team)
+fil_df = df[df.team == sel_team]  # filter
+
+# Build a new df based from filter.
+new_df = pd.melt(fil_df, id_vars=['team'], var_name="feature",
+                 value_vars=['gf', 'xg', 'ga', 'xga'])
+
+logy = True  # to make small values visible
+textauto = True  # to write plot label
+title = f'team name: {sel_team}'
+fig = px.bar(new_df, x='feature', y='value',
+             height=300, log_y=logy, text_auto=textauto,
+             title=title)
+with st.expander('Goals: Expectations Vs. Reality', expanded=True):
+    st.plotly_chart(fig, use_container_width=True)
 # %%
