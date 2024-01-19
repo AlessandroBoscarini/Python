@@ -103,7 +103,7 @@ def sum_col_juve(list_of_variables, col_y):
 sum_col_juve(column_x, column_y)
 
 # %%
-plt.figure(figsize=(6,6))
+fig, ax = plt.subplots(figsize=(6,6))
 x = column_x[0],column_x[2]
 x_1 = column_x[1],column_x[3]
 new_x = x + x_1
@@ -111,9 +111,11 @@ y = column_y[0],column_y[2]
 y_1 = column_y[1],column_y[3]
 new_y = y + y_1
 my_cmap = plt.get_cmap("plasma")
-juve_goals_plot = plt.bar(new_x, new_y, color = ['navy','mediumblue','lightskyblue','cornflowerblue' ])
-plt.bar_label(juve_goals_plot, labels=new_y, label_type='edge', padding=1)
+plt.bar(new_x, new_y, color = ['navy','mediumblue','lightskyblue','cornflowerblue' ])
+plt.bar_label(plt.bar(new_x, new_y, color = ['navy','mediumblue','lightskyblue','cornflowerblue' ]), labels=new_y, label_type='edge', padding=1)
 plt.title('Juventus Goals: Expectations Vs. Reality')
 plt.xlabel('statistics')
 plt.show()
+st.write(fig)
+
 # %%
