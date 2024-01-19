@@ -5,6 +5,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import streamlit as st
 from matplotlib.cm import get_cmap
+import sklearn
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
 # %%
 st.title('Hello please work!')
 seriea_df = pd.read_excel("C:/Users/ASUS/Desktop/serieA.xlsx")
@@ -115,7 +118,19 @@ plt.bar(new_x, new_y, color = ['navy','mediumblue','lightskyblue','cornflowerblu
 plt.bar_label(plt.bar(new_x, new_y, color = ['navy','mediumblue','lightskyblue','cornflowerblue' ]), labels=new_y, label_type='edge', padding=1)
 plt.title('Juventus Goals: Expectations Vs. Reality')
 plt.xlabel('statistics')
+plt.ylabel('count')
 plt.show()
 st.write(fig)
 
+# %%
+st.header('Model')
+cols = ['ga', 'poss_x', 'sot', 'def 3rd', 'att 3rd', 'succ%', 'mis', 'rec%' ]
+x = seriea[cols]
+y = seriea['result']
+
+X_train_seriea, X_test_seriea, y_train_seriea, y_test_seriea = sklearn.model_selection.train_test_split(x, y, test_size = 0.25, random_state = 5)
+print(X_train_seriea.shape)
+print(X_test_seriea.shape)
+print(y_train_seriea.shape)
+print(y_test_seriea.shape)
 # %%
