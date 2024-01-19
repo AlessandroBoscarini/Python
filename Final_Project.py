@@ -219,3 +219,4 @@ fig = px.bar(new_df, x='feature', y='value',
 with st.expander('Goals: Expectations Vs. Reality', expanded=True):
     st.plotly_chart(fig, use_container_width=True)
 # %%
+print('Hello')
