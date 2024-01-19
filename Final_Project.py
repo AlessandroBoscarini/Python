@@ -8,11 +8,13 @@ from matplotlib.cm import get_cmap
 import sklearn
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
+import statsmodels.api as sm
 # %%
-st.title('Hello please work!')
+st.markdown("<h1 style='text-align: center; color: black;'>Final Project</h1>", unsafe_allow_html=True)
 seriea_df = pd.read_excel("C:/Users/ASUS/Desktop/serieA.xlsx")
 seriea_df.info()
 seriea_df.describe()
+st.text(" ")
 #we can see that there are two columns with null values: attendance and dist, so before proceeding with the analysis we decide how to treat them.
 #If we decide to use them we would need to figure out how to replace the null values,
 #if on the other hand we consider these variables to be useless for our objective then we can decide simply to eliminate them
@@ -42,7 +44,7 @@ list_of_string_results = ['w', 'L', 'D']
 take_results(arr, list_of_results)
 
 # %%
-fig , ax = plt.subplots(figsize=(6,5))
+fig , ax = plt.subplots(figsize=(15,10))
 colors = ['gold','silver','peru']
 x = list_of_string_results
 y = list_of_results
@@ -53,7 +55,6 @@ plt.ylabel('count')
 plt.title('Total Win, Lose and Draw')
 plt.show()
 st.write(fig)
-
 #%%
 def win(l_teams, l_wins):
   for element in l_teams:
@@ -123,7 +124,7 @@ plt.show()
 st.write(fig)
 
 # %%
-st.header('Model')
+st.markdown("<h2 style='text-align: center; color: black;'>Model</h2>", unsafe_allow_html=True)
 cols = ['ga', 'poss_x', 'sot', 'def 3rd', 'att 3rd', 'succ%', 'mis', 'rec%' ]
 x = seriea[cols]
 y = seriea['result']
@@ -133,4 +134,45 @@ print(X_train_seriea.shape)
 print(X_test_seriea.shape)
 print(y_train_seriea.shape)
 print(y_test_seriea.shape)
+# %%
+fig, ax = plt.subplots(figsize=(10,6))
+logit_model_1=sm.MNLogit(y_train_seriea, sm.add_constant(X_train_seriea))
+result_1=logit_model_1.fit()
+# %%
+#Let's check what variables are not significative...
+#we see that poss_x and mis are not significative in both lose and win case so we remove it
+cols = ['ga','sot', 'def 3rd', 'att 3rd', 'succ%', 'rec%' ]
+x = seriea[cols]
+y = seriea['result']
+X_train_seriea, X_test_seriea, y_train_seriea, y_test_seriea = sklearn.model_selection.train_test_split(x, y, test_size = 0.25, random_state = 5)
+logit_model_2=sm.MNLogit(y_train_seriea, sm.add_constant(X_train_seriea))
+result_2=logit_model_2.fit()
+# %%
+#we see that def 3rd is not significative and we remove it
+cols = ['ga', 'sot', 'att 3rd', 'succ%', 'rec%' ]
+x = seriea[cols]
+y = seriea['result']
+X_train_seriea, X_test_seriea, y_train_seriea, y_test_seriea = sklearn.model_selection.train_test_split(x, y, test_size = 0.25, random_state = 5)
+logit_model=sm.MNLogit(y_train_seriea, sm.add_constant(X_train_seriea))
+result_3=logit_model.fit()
+
+# %%
+col1, col2, col3 = st.columns(3)
+
+with col1:
+   button_1 = st.button('Full Model')
+
+with col2:
+  button_2 = st.button('Second Model')
+
+with col3:
+  button_3 = st.button('Final Model')
+# %%
+if button_1:
+  st.write(result_1.summary())
+if button_2:
+    st.write(result_2.summary())
+if button_3:
+    st.write(result_3.summary())
+
 # %%
