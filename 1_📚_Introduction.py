@@ -12,7 +12,8 @@ import statsmodels.api as sm
 import plotly.express as px
 import pyautogui
 # %%
-st.markdown("<h1 style='text-align: center; color: black;'>Final Project</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; color: white;'>Final Project</h1>", unsafe_allow_html=True)
+st.sidebar.success('Select a page')
 seriea_df = pd.read_excel("C:/Users/ASUS/Desktop/serieA.xlsx")
 seriea_df.info()
 seriea_df.describe()
@@ -42,7 +43,7 @@ def take_results(arr, l):
 
 arr = seriea['result'].value_counts(ascending=False)
 list_of_results = []
-list_of_string_results = ['w', 'L', 'D']
+list_of_string_results = ['W', 'L', 'D']
 take_results(arr, list_of_results)
 
 # %%
@@ -89,67 +90,6 @@ data_2 = dff.rename(columns={"team3": "teams", "wins": "victories"})
 fig = px.bar(data_2, x = 'teams', y = 'victories', title = 'Victories by team', text_auto=textauto, color = 'victories', color_continuous_scale=px.colors.sequential.Plasma)
 fig.add_hline(data_2['victories'].mean(), line_width=1.5, line_dash="dot", line_color="red")
 st.write(fig)
-# %%
-st.markdown("<h2 style='text-align: center; color: black;'>Model</h2>", unsafe_allow_html=True)
-cols = ['ga', 'poss_x', 'sot', 'def 3rd', 'att 3rd', 'succ%', 'mis', 'rec%' ]
-x = seriea[cols]
-y = seriea['result']
-
-X_train_seriea, X_test_seriea, y_train_seriea, y_test_seriea = sklearn.model_selection.train_test_split(x, y, test_size = 0.25, random_state = 5)
-print(X_train_seriea.shape)
-print(X_test_seriea.shape)
-print(y_train_seriea.shape)
-print(y_test_seriea.shape)
-# %%
-fig, ax = plt.subplots(figsize=(10,6))
-logit_model_1=sm.MNLogit(y_train_seriea, sm.add_constant(X_train_seriea))
-result_1=logit_model_1.fit()
-# %%
-#Let's check what variables are not significative...
-#we see that poss_x and mis are not significative in both lose and win case so we remove it
-cols = ['ga','sot', 'def 3rd', 'att 3rd', 'succ%', 'rec%' ]
-x = seriea[cols]
-y = seriea['result']
-X_train_seriea, X_test_seriea, y_train_seriea, y_test_seriea = sklearn.model_selection.train_test_split(x, y, test_size = 0.25, random_state = 5)
-logit_model_2=sm.MNLogit(y_train_seriea, sm.add_constant(X_train_seriea))
-result_2=logit_model_2.fit()
-# %%
-#we see that def 3rd is not significative and we remove it
-cols = ['ga', 'sot', 'att 3rd', 'succ%', 'rec%' ]
-x = seriea[cols]
-y = seriea['result']
-X_train_seriea, X_test_seriea, y_train_seriea, y_test_seriea = sklearn.model_selection.train_test_split(x, y, test_size = 0.25, random_state = 5)
-logit_model=sm.MNLogit(y_train_seriea, sm.add_constant(X_train_seriea))
-result_3=logit_model.fit()
-
-
-# %%
-col1, col2, col3 = st.columns(3)
-
-with col1:
-   button_1 = st.button('Full Model')
-
-with col2:
-  button_2 = st.button('Second Model')
-
-with col3:
-  button_3 = st.button('Final Model')
-# %%
-if button_1:
-  st.write(result_1.summary())
-if button_2:
-    st.write(result_2.summary())
-if button_3:
-    st.write(result_3.summary())
- 
-st.button('Reset')
-if button_1 == True:
-  button_1 = False
-elif button_2 == True:
-  button_2 = False
-elif button_3 == True:
-  button_3 = False
-
 # %%
 def sum_gf(list_of_variables, col_y):
   for element in list_of_variables:
