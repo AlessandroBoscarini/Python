@@ -46,18 +46,17 @@ list_of_string_results = ['w', 'L', 'D']
 take_results(arr, list_of_results)
 
 # %%
-fig , ax = plt.subplots(figsize=(15,10))
-colors = ['gold','silver','peru']
-x = list_of_string_results
-y = list_of_results
-plt.bar(x, y, color = colors)
-plt.bar_label(plt.bar(x, y, color = colors), labels = y, padding = 1)
-plt.xlabel('result')
-plt.ylabel('count')
-plt.title('Total Win, Lose and Draw')
-plt.show()
+data = {
+  'result': list_of_string_results,
+  'count': list_of_results
+}
+df = pd.DataFrame(data)
+# %%
+textauto = True
+logy = True
+fig = px.bar(df, x = 'result', y = 'count', title = 'Total Win, Lose and Draw', log_y=logy, color = 'result' , color_discrete_sequence=["gold", "silver", "peru"] ,text_auto=textauto)
 st.write(fig)
-#%%
+# %%
 def win(l_teams, l_wins):
   for element in l_teams:
     df_1 = seriea[seriea['result']=="W"]
@@ -83,21 +82,13 @@ win_df = pd.concat([pd.Series(x) for x in lists], axis=1)
 win_df.columns = ['team','wins', 'team3']
 win_df_sorted = win_df.sort_values(by=['wins'], ascending=False)
 # %%
-fig, ax = plt.subplots(figsize=(15,7))
-x = win_df_sorted['team3']
-y = win_df_sorted['wins']
-my_cmap = plt.get_cmap("plasma")
-rescale = lambda y: (y - np.min(y)) / (np.max(y) - np.min(y))
-plt.axhline(y.mean(), color='red', linestyle='--', linewidth=1, label='Avg')
-plt.bar(x, y, color=my_cmap(rescale(y)))
-plt.bar_label(plt.bar(x, y, color=my_cmap(rescale(y))), labels=y, label_type='edge', padding=1)
-plt.title('Victories by team')
-plt.xlabel('teams')
-plt.ylabel('wins')
-plt.legend()
-plt.show()
+textauto = True
+dff = win_df_sorted[['team3', 'wins']].copy()
+data_2 = dff.rename(columns={"team3": "teams", "wins": "victories"})
+#colors = ['black','deepskyblue', 'mediumblue', 'red', 'lightskyblue', 'darkorange','navy','dodgerblue','green','blueviolet','maroon','dimgrey','crimson','orangered','yellow','firebrick','gold','royalblue','cornflowerblue','black','crimson','orange','yellow','chocolate','sienna','mediumblue','darkgreen','khaki']
+fig = px.bar(data_2, x = 'teams', y = 'victories', title = 'Victories by team', text_auto=textauto, color = 'victories', color_continuous_scale=px.colors.sequential.Plasma)
+fig.add_hline(data_2['victories'].mean(), line_width=1.5, line_dash="dot", line_color="red")
 st.write(fig)
-
 # %%
 st.markdown("<h2 style='text-align: center; color: black;'>Model</h2>", unsafe_allow_html=True)
 cols = ['ga', 'poss_x', 'sot', 'def 3rd', 'att 3rd', 'succ%', 'mis', 'rec%' ]
@@ -200,6 +191,7 @@ data = {
     'xga': list_of_xga
 }
 df = pd.DataFrame(data)
+
 # %%
 list_of_var = ['gf','xg','ga','xga']
 
@@ -213,10 +205,13 @@ new_df = pd.melt(fil_df, id_vars=['team'], var_name="feature",
 logy = True  # to make small values visible
 textauto = True  # to write plot label
 title = f'team name: {sel_team}'
+colors = ['darkblue']
 fig = px.bar(new_df, x='feature', y='value',
              height=300, log_y=logy, text_auto=textauto,
-             title=title)
+             title=title, color = 'team', color_discrete_sequence=colors)
+fig.update_layout(showlegend=False)
 with st.expander('Goals: Expectations Vs. Reality', expanded=True):
     st.plotly_chart(fig, use_container_width=True)
+
+
 # %%
-print('Hello')
