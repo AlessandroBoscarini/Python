@@ -37,7 +37,7 @@ x = seriea[cols]
 y = seriea['result']
 X_train_seriea, X_test_seriea, y_train_seriea, y_test_seriea = sklearn.model_selection.train_test_split(x, y, test_size = 0.25, random_state = 5)
 logit_model_2=sm.MNLogit(y_train_seriea, sm.add_constant(X_train_seriea))
-result_2=logit_model_2.fit()
+result_2=logit_model_2.fit() 
 # %%
 #we see that def 3rd is not significative and we remove it
 cols = ['ga', 'sot', 'att 3rd', 'succ%', 'rec%' ]
@@ -45,7 +45,7 @@ x = seriea[cols]
 y = seriea['result']
 X_train_seriea, X_test_seriea, y_train_seriea, y_test_seriea = sklearn.model_selection.train_test_split(x, y, test_size = 0.25, random_state = 5)
 logit_model=sm.MNLogit(y_train_seriea, sm.add_constant(X_train_seriea))
-result_3=logit_model.fit()
+result_3=logit_model.fit() 
 
 
 # %%
@@ -74,3 +74,4 @@ elif button_2 == True:
   button_2 = False
 elif button_3 == True:
   button_3 = False
+# %%

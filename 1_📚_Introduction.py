@@ -148,7 +148,35 @@ title = f'team name: {sel_team}'
 colors = ['darkblue']
 fig = px.bar(new_df, x='feature', y='value',
              height=300, log_y=logy, text_auto=textauto,
-             title=title, color = 'team', color_discrete_sequence=colors)
+             title=title, color = 'team',color_discrete_map = {
+  'Juventus':'black', 
+  'Napoli':'deepskyblue',
+  'Internazionale':'Blue',
+  'Milan':'red',
+  'Lazio':'lightskyblue',
+  'Roma':'orange',
+  'Atalanta':'navy',
+  'Sampdoria':'dodgerblue',
+  'Sassuolo':'darkgreen',
+  'Fiorentina':'darkviolet',
+  'Torino':'saddlebrown',
+  'Udinese':'lightgray',
+  'Bologna':'darkred',
+  'Cagliari':'crimson',
+  'Hellas Verona':'yellow',
+  'Genoa':'firebrick',
+  'Parma':'khaki',
+  'SPAL':'skyblue',
+  'Empoli':'cornflowerblue',
+  'Spezia':'gray',
+  'Crotone':'indianred',
+  'Benevento':'darkorange',
+  'Chievo':'lemonchiffon',
+  'Lecce':'navajowhite',
+  'Salernitana':'brown',
+  'Brescia':'aliceblue',
+  'Venezia':'forestgreen',
+  'Frosinone':'darkkhaki'})
 fig.update_layout(showlegend=False)
 with st.expander('Goals: Expectations Vs. Reality', expanded=True):
     st.plotly_chart(fig, use_container_width=True)
