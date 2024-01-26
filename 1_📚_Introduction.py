@@ -87,9 +87,9 @@ textauto = True
 dff = win_df_sorted[['team3', 'wins']].copy()
 data_2 = dff.rename(columns={"team3": "teams", "wins": "victories"})
 #colors = ['black','deepskyblue', 'mediumblue', 'red', 'lightskyblue', 'darkorange','navy','dodgerblue','green','blueviolet','maroon','dimgrey','crimson','orangered','yellow','firebrick','gold','royalblue','cornflowerblue','black','crimson','orange','yellow','chocolate','sienna','mediumblue','darkgreen','khaki']
-fig = px.bar(data_2, x = 'teams', y = 'victories', title = 'Victories by team', text_auto=textauto, color = 'victories', color_continuous_scale=px.colors.sequential.Plasma)
-fig.add_hline(data_2['victories'].mean(), line_width=1.5, line_dash="dot", line_color="red")
-st.write(fig)
+fig_2 = px.bar(data_2, x = 'teams', y = 'victories', title = 'Victories by team', text_auto=textauto, color = 'victories', color_continuous_scale=px.colors.sequential.Plasma)
+fig_2.add_hline(data_2['victories'].mean(), line_width=1.5, line_dash="dot", line_color="red")
+st.write(fig_2)
 # %%
 def sum_gf(list_of_variables, col_y):
   for element in list_of_variables:
@@ -134,7 +134,6 @@ df = pd.DataFrame(data)
 
 # %%
 list_of_var = ['gf','xg','ga','xga']
-
 sel_team = st.selectbox('**Select team**', df.team)
 fil_df = df[df.team == sel_team]  # filter
 

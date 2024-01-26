@@ -10,7 +10,12 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 import statsmodels.api as sm
 import plotly.express as px
-import pyautogui
+
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import classification_report
+from sklearn import metrics
+from sklearn.metrics import confusion_matrix
 #%%
 st.title("Model")
 # %%
@@ -46,28 +51,49 @@ y = seriea['result']
 X_train_seriea, X_test_seriea, y_train_seriea, y_test_seriea = sklearn.model_selection.train_test_split(x, y, test_size = 0.25, random_state = 5)
 logit_model=sm.MNLogit(y_train_seriea, sm.add_constant(X_train_seriea))
 result_3=logit_model.fit() 
-
-
 # %%
 col1, col2, col3 = st.columns(3)
 
 with col1:
-   button_1 = st.button('Full Model')
+   button_1 = st.sidebar.button('Full Model')
 
 with col2:
-  button_2 = st.button('Second Model')
+  button_2 = st.sidebar.button('Second Model')
 
 with col3:
-  button_3 = st.button('Final Model')
+  button_3 = st.sidebar.button('Final Model')
 # %%
 if button_1:
   st.write(result_1.summary())
 if button_2:
-    st.write(result_2.summary())
+  st.write(result_2.summary())
 if button_3:
-    st.write(result_3.summary())
- 
-st.button('Reset')
+  st.write(result_3.summary())
+# %%
+mod = LogisticRegression(random_state=0, multi_class='multinomial', penalty=None, solver='newton-cg').fit(X_train_seriea, y_train_seriea)
+preds = mod.predict(X_test_seriea)
+params = mod.get_params()
+confmtrx = np.array(confusion_matrix(y_test_seriea, preds))
+df_confusion = pd.DataFrame(confmtrx, index=['Draw','Lose', 'Win'], columns=['predicted_Draw', 'predicted_Lose', 'predicted_Win'])
+from PIL import Image
+image = Image.open('c:/Users/ASUS/Desktop/acc_dark-transformed.png')
+# %%
+col1, col2 = st.columns(2)
+
+with col1:
+   button_1 = st.sidebar.button('Confusion Matrix')
+
+with col2:
+  button_2 = st.sidebar.button('Classification Report')
+
+if button_1:
+  st.header("Confusion Matrix")
+  st.write(df_confusion)
+if button_2:
+  st.header("Classification Report")
+  st.image(image)
+# %%
+st.sidebar.button('Reset')
 if button_1 == True:
   button_1 = False
 elif button_2 == True:
