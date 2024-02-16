@@ -28,24 +28,30 @@ with col2:
   st.write(" ")
   st.write(" ")
   st.write(" ")
-  st.write('"Football is the only sport you can loose by playing better, that’s why it’s so attractive to people." Joseph Guardiola')
+  st.write('*"Football is the only sport you can loose by playing better, that’s why it’s so attractive to people."* Joseph Guardiola')
 
-col1, col2 = st.columns(2)
-with col1: 
+col1, col2, col3 = st.columns(3)
+with col1:
+  st.markdown(
+"""
+**Following Guardiola's quote it is possible to say that:**
+- there is a sort of randomness in the result
+- score-determing events are rare if not absent
+- in football it can be a single event that decides the outcome (1-0, a single action determines the result), in basketball there are about 100 baskets and in tennis hundreds of points
+"""
+)
+
+with col2: 
   st.write(" ")
   st.write(" ")
   st.write(" ")
   st.write(" ")  
-  st.write(" ")
-  st.write(" ")
-  st.write(" ")
-  st.write(" ") 
   button = st.button('Example')
-with col2:
+with col3:
   if button:
     from PIL import Image
     image = Image.open("C:/Users/ASUS/Desktop/celticbarca.png")
-    new_image = image.resize((700, 600))
+    new_image = image.resize((1000, 800))
     st.image(new_image, output_format="PNG")
 st.sidebar.success('Select a page')
 seriea_df = pd.read_excel("C:/Users/ASUS/Desktop/serieA.xlsx")
@@ -66,6 +72,8 @@ seriea_noatt_nodist.info()
 # %%
 seriea = seriea_df.drop(['time','comp','round','day','attendance', 'captain', 'dist', 'fk', 'pk', 'pkatt', 'poss_y', 'touches', 'def pen', 'mid 3rd', 'att pen', 'live', 'succ', 'att', '#pl', 'megs', 'carries', 'totdist', 'prgdist', 'prog', 'prog.1', '01-mar', 'cpa', 'dis', 'targ', 'rec'], axis = 1)
 seriea.info()
+st.header("The Dataset")
+seriea
 #The goal of our project is to find the variables that most influence winning.
 #To begin, however, let us take a closer look at wins, draws and losses
 
