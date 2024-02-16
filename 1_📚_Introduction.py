@@ -13,6 +13,40 @@ import plotly.express as px
 import pyautogui
 # %%
 st.markdown("<h1 style='text-align: center; color: white;'>Final Project</h1>", unsafe_allow_html=True)
+col1, col2 = st.columns(2)
+
+with col1:
+  from PIL import Image
+  image = Image.open("C:/Users/ASUS/Desktop/pep.png")
+  st.image(image, output_format="PNG")  
+
+with col2:
+  st.write(" ")
+  st.write(" ")
+  st.write(" ")
+  st.write(" ")
+  st.write(" ")
+  st.write(" ")
+  st.write(" ")
+  st.write('"Football is the only sport you can loose by playing better, that’s why it’s so attractive to people." Joseph Guardiola')
+
+col1, col2 = st.columns(2)
+with col1: 
+  st.write(" ")
+  st.write(" ")
+  st.write(" ")
+  st.write(" ")  
+  st.write(" ")
+  st.write(" ")
+  st.write(" ")
+  st.write(" ") 
+  button = st.button('Example')
+with col2:
+  if button:
+    from PIL import Image
+    image = Image.open("C:/Users/ASUS/Desktop/celticbarca.png")
+    new_image = image.resize((700, 600))
+    st.image(new_image, output_format="PNG")
 st.sidebar.success('Select a page')
 seriea_df = pd.read_excel("C:/Users/ASUS/Desktop/serieA.xlsx")
 seriea_df.info()
