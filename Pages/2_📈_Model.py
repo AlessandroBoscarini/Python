@@ -65,10 +65,21 @@ with col3:
 # %%
 if button_1:
   st.write(result_1.summary())
+  st.write(" ")
+  st.markdown(
+"""
+**Considerations:**
+- poss_x and mis are not significative in both lose and win case
+"""
+)
 if button_2:
   st.write(result_2.summary())
+  st.write(" ")
+  st.write("- def 3rd is not significative")
 if button_3:
   st.write(result_3.summary())
+  st.write(" ")
+  st.write("All variables are significative!")
 # %%
 mod = LogisticRegression(random_state=0, multi_class='multinomial', penalty=None, solver='newton-cg').fit(X_train_seriea, y_train_seriea)
 preds = mod.predict(X_test_seriea)

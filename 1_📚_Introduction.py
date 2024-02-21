@@ -70,6 +70,9 @@ seriea_noatt_nodist.info()
 #at this point we clean up the dataset a bit from the variables that we are not interested in
 
 # %%
+button = st.button("So the question is ... ")
+if button:
+  st.write("**Are there any factors that are often present when there is a win?**")
 seriea = seriea_df.drop(['time','comp','round','day','attendance', 'captain', 'dist', 'fk', 'pk', 'pkatt', 'poss_y', 'touches', 'def pen', 'mid 3rd', 'att pen', 'live', 'succ', 'att', '#pl', 'megs', 'carries', 'totdist', 'prgdist', 'prog', 'prog.1', '01-mar', 'cpa', 'dis', 'targ', 'rec'], axis = 1)
 seriea.info()
 st.header("The Dataset")
@@ -97,7 +100,8 @@ df = pd.DataFrame(data)
 # %%
 textauto = True
 logy = True
-fig = px.bar(df, x = 'result', y = 'count', title = 'Total Win, Lose and Draw', log_y=logy, color = 'result' , color_discrete_sequence=["gold", "silver", "peru"] ,text_auto=textauto)
+fig = px.bar(df, x = 'result', y = 'count', title = 'Total Wins, Losses and Draws', log_y=logy, color = 'result' , color_discrete_sequence=["gold", "silver", "peru"] ,text_auto=textauto)
+st.header("Exploring the dataset")
 st.write(fig)
 # %%
 def win(l_teams, l_wins):
@@ -175,12 +179,13 @@ data = {
 df = pd.DataFrame(data)
 
 # %%
+st.header('Goals: Expectations Vs. Reality')
 list_of_var = ['gf','xg','ga','xga']
 sel_team = st.selectbox('**Select team**', df.team)
-fil_df = df[df.team == sel_team]  # filter
+n_df = df[df.team == sel_team]  # filter
 
 # Build a new df based from filter.
-new_df = pd.melt(fil_df, id_vars=['team'], var_name="feature",
+new_df = pd.melt(n_df, id_vars=['team'], var_name="feature",
                  value_vars=['gf', 'xg', 'ga', 'xga'])
 
 logy = True  # to make small values visible
@@ -219,8 +224,9 @@ fig = px.bar(new_df, x='feature', y='value',
   'Venezia':'forestgreen',
   'Frosinone':'darkkhaki'})
 fig.update_layout(showlegend=False)
-with st.expander('Goals: Expectations Vs. Reality', expanded=True):
+with st.expander('', expanded=True):
     st.plotly_chart(fig, use_container_width=True)
+
 
 
 # %%

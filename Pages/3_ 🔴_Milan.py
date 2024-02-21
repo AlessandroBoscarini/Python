@@ -277,3 +277,51 @@ fig_3.update_yaxes(range=[0, 8])
 fig_3.update_layout(xaxis={'categoryorder':'total descending'})
 st.write(fig_3)
 # %%
+df = seriea[(seriea['team']=='Milan') | (seriea['team']=='Juventus')]
+dff = df[(df['opponent']=='Juventus') | (df['opponent']=='Milan')]
+df2 = dff.drop(dff[dff['result']=="D"].index)
+df3 = df2.drop([832, 908, 1512, 1702])
+# %%
+def fun(list_var, l_teams, l, new_var):
+  for x in l_teams:
+    for y in list_var:
+      print(x)
+      if y == 'succ%' or y == 'poss_x':
+        df = df3[df3['team']==x]
+        m = df[y].mean()
+        l.append(m)
+        new_var.append(y)
+      else:
+        df = df3[df3['team']==x]
+        s = sum(df[y])
+        l.append(s)
+        new_var.append(y)    
+
+
+  print(l)
+  print(new_var)
+
+new_var = []
+total = []
+l_var = ['sot', 'att 3rd', 'xg', 'xga', 'poss_x']
+l_teams = ['Milan','Juventus']
+fun(l_var, l_teams, total, new_var)
+# %%
+vari = new_var[0:5]
+opt_df = pd.DataFrame({
+  'variables':vari,
+  'Milan':total[0:5],
+  'Juventus':total[5:11]
+})
+# %%
+st.header("Milan-Juventus: focus on the variables")
+variable = st.multiselect("Which variable would you like to see?", vari, ['sot'])
+new_opt = opt_df[opt_df['variables'].isin(variable)]
+textauto = True
+fig = px.bar(new_opt, x='variable', y=['Milan','Juventus'], color_discrete_map = { 
+  'Juventus':'white',
+  'Milan':'red'}, text_auto=textauto)
+fig.update_layout(xaxis_title="Teams", legend_title="Teams")
+st.write(fig)
+
+# %%
