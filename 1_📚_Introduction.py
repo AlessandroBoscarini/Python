@@ -1,16 +1,8 @@
 # %%
 #first thing first: import the main libraries!
-import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 import streamlit as st
-from matplotlib.cm import get_cmap
-import sklearn
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LogisticRegression
-import statsmodels.api as sm
 import plotly.express as px
-import pyautogui
 # %%
 st.markdown("<h1 style='text-align: center; color: white;'>Final Project</h1>", unsafe_allow_html=True)
 col1, col2 = st.columns(2)
@@ -34,7 +26,7 @@ col1, col2, col3 = st.columns(3)
 with col1:
   st.markdown(
 """
-**Following Guardiola's quote it is possible to say that:**
+**Following Guardiola's words it is possible to say that:**
 - there is a sort of randomness in the result
 - score-determing events are rare if not absent
 - in football it can be a single event that decides the outcome (1-0, a single action determines the result), in basketball there are about 100 baskets and in tennis hundreds of points
@@ -132,7 +124,6 @@ win_df_sorted = win_df.sort_values(by=['wins'], ascending=False)
 textauto = True
 dff = win_df_sorted[['team3', 'wins']].copy()
 data_2 = dff.rename(columns={"team3": "teams", "wins": "victories"})
-#colors = ['black','deepskyblue', 'mediumblue', 'red', 'lightskyblue', 'darkorange','navy','dodgerblue','green','blueviolet','maroon','dimgrey','crimson','orangered','yellow','firebrick','gold','royalblue','cornflowerblue','black','crimson','orange','yellow','chocolate','sienna','mediumblue','darkgreen','khaki']
 fig_2 = px.bar(data_2, x = 'teams', y = 'victories', title = 'Victories by team', text_auto=textauto, color = 'victories', color_continuous_scale=px.colors.sequential.Plasma)
 fig_2.add_hline(data_2['victories'].mean(), line_width=1.5, line_dash="dot", line_color="red")
 st.write(fig_2)

@@ -4,17 +4,10 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import streamlit as st
-from matplotlib.cm import get_cmap
 import sklearn
-from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 import statsmodels.api as sm
-import plotly.express as px
-
-from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import classification_report
-from sklearn import metrics
 from sklearn.metrics import confusion_matrix
 #%%
 st.title("Model")
@@ -30,13 +23,23 @@ print(X_train_seriea.shape)
 print(X_test_seriea.shape)
 print(y_train_seriea.shape)
 print(y_test_seriea.shape)
+st.header("The multinomial logisitic regression")
+st.markdown(
+"""
+- the multinomial logistic regression is used when the dependent variable is categorical and contains more than two values (result: "W", "L", "D")
+- result is the dependent variable
+- starting from the whole model we look for the most significative variables
+
+"""
+)
+
 # %%
 fig, ax = plt.subplots(figsize=(10,6))
 logit_model_1=sm.MNLogit(y_train_seriea, sm.add_constant(X_train_seriea))
 result_1=logit_model_1.fit()
 # %%
 #Let's check what variables are not significative...
-#we see that poss_x and mis are not significative in both lose and win case so we remove it
+#we see that poss_x and mis are not significative in both lose and win case so we remove them
 cols = ['ga','sot', 'def 3rd', 'att 3rd', 'succ%', 'rec%' ]
 x = seriea[cols]
 y = seriea['result']
@@ -70,12 +73,21 @@ if button_1:
 """
 **Considerations:**
 - poss_x and mis are not significative in both lose and win case
+- pseudo R-squared it's used for logistic models, but it's different from ρ2
+- a model with values of pseudo R-squared between 0.2 and 0.4 represent excellent fit (0.36 in this case, so it's considered a good model)
+
 """
 )
 if button_2:
   st.write(result_2.summary())
   st.write(" ")
-  st.write("- def 3rd is not significative")
+  st.markdown(
+"""
+**Considerations:**
+- def 3rd is not significative, while all the other variables are significative
+"""
+)
+           
 if button_3:
   st.write(result_3.summary())
   st.write(" ")
@@ -98,11 +110,25 @@ with col2:
   button_2 = st.sidebar.button('Classification Report')
 
 if button_1:
+  st.markdown(
+"""
+**For testing classification is used the confusion matrix**
+- by looking the diagonal it is possible to see if the values are classified correctly
+"""
+)
   st.header("Confusion Matrix")
   st.write(df_confusion)
+
 if button_2:
   st.header("Classification Report")
   st.image(image)
+  st.markdown(
+"""
+**Considerations:**
+- the accuracy score is good: 0.7
+- the win variable is well classified with a good precision score
+"""
+)
 # %%
 st.sidebar.button('Reset')
 if button_1 == True:

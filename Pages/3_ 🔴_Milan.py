@@ -1,16 +1,11 @@
 #%%
 #first thing first: import the main libraries!
-import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import streamlit as st
-from matplotlib.cm import get_cmap
 import sklearn
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LogisticRegression
 import statsmodels.api as sm
 import plotly.express as px
-import pyautogui
 import plotly.graph_objects as go
 #%%
 st.title("Milan")
@@ -20,9 +15,11 @@ seriea = seriea_df.drop(['time','comp','round','day','attendance', 'captain', 'd
 date_sorted = seriea.sort_values(by=['date'])
 # %%
 date_sorted['date'] = pd.to_datetime(date_sorted['date'], format='%Y %B, %d')
-date_sorted['year'] = date_sorted['date'].dt.year
-date_sorted["year"] = date_sorted["year"].astype(str)
-
+date_sorted['year'] = date_sorted['date'].dt.year 
+l = list(date_sorted[(date_sorted['date'].dt.month <= 7)].index)
+date_sorted.loc[l, ['year']] = date_sorted['year'] - 1
+date_sorted["year"] = date_sorted["year"].astype(str) 
+#df2['result'].value_counts()['W']
 # %%
 def teams(arr, l):
   for element in arr:
@@ -39,7 +36,7 @@ def win_by_year(l_teams, new_l_team, new_l_year, l_years, l_wins):
     for y in l_years:
       df = date_sorted[date_sorted['year']==y] #element
       dff = df[df['team']==x]
-      if len(dff['result'].value_counts()) > 0:
+      if 'W' in dff['result'].value_counts():
         wins = dff['result'].value_counts()['W']
         l_wins.append(wins)
       else:
@@ -54,7 +51,7 @@ def win_by_year(l_teams, new_l_team, new_l_year, l_years, l_wins):
   print(new_l_team)
 
 
-list_of_years = ['2017','2018','2019','2020','2021','2022']
+list_of_years = ['2017','2018','2019','2020','2021']
 list_of_wins = []
 new_year = []
 new_team = []
@@ -68,6 +65,7 @@ seriea_df = pd.DataFrame(
   }
 )
 # %%
+st.header("Victories by years: teams comparison")
 seriea_opt = seriea_df['Team'].unique().tolist()
 team = st.multiselect("Which team would you like to see?", seriea_opt, ['Milan'])
 seriea_df = seriea_df[seriea_df['Team'].isin(team)]
@@ -107,6 +105,9 @@ st.write(fig)
 
 # %%
 df_mi_ju = date_sorted[(date_sorted['team']=='Milan') | (date_sorted['team']=='Juventus')]
+date_sorted["year"] = date_sorted["year"].astype(int) 
+date_sorted.loc[1709, ['year']] = [2019]
+date_sorted["year"] = date_sorted["year"].astype(str) 
 # %%
 def win_by_year(l_teams, new_l_team, new_l_year, l_years, l_wins):
   for x in l_teams:
@@ -120,7 +121,7 @@ def win_by_year(l_teams, new_l_team, new_l_year, l_years, l_wins):
   print(l_wins, new_l_team, new_l_year)
 
 list_of_teams_2 = ['Milan','Juventus']
-list_of_years = ['2017','2018','2019','2020','2021','2022']
+list_of_years = ['2017','2018','2019','2020','2021']
 list_of_wins = []
 new_team = []
 new_year = []
@@ -133,11 +134,10 @@ df = pd.DataFrame(
     'wins':list_of_wins
   }
 )
-
 # %%
 textauto = True
 fig = px.bar(df, x="year", y="wins", title = "Victories by Milan and Juventus from 2017 to 2022", barmode='group', text_auto=textauto, color = 'Team', color_discrete_map={'Milan':'red', 'Juventus':'white'})
-fig.add_trace(go.Scatter(x=df['year'], y=df['wins'][0:6], line=dict(color='gold', width=4, dash='dot'), name='Milan_trace'))
+fig.add_trace(go.Scatter(x=df['year'], y=df['wins'][0:5], line=dict(color='gold', width=4, dash='dot'), name='Milan_trace'))
 st.write(fig)
 
 # %%
@@ -202,10 +202,11 @@ elif button_3 == True:
 
 # %%
 milan_sorted = milan.sort_values(by=['date'])
-# %%
 milan_sorted['date'] = pd.to_datetime(milan_sorted['date'], format='%Y %B, %d')
-milan_sorted['year'] = milan_sorted['date'].dt.year
-milan_sorted["year"] = milan_sorted["year"].astype(str)  
+milan_sorted['year'] = milan_sorted['date'].dt.year 
+l = list(milan_sorted[(milan_sorted['date'].dt.month > 7) & (milan_sorted['date'].dt.month <= 12)].index)
+milan_sorted.loc[l, ['year']] = milan_sorted['year'] + 1
+milan_sorted["year"] = milan_sorted["year"].astype(str) 
 
 # %%
 milan_sorted = milan_sorted[['year', 'result', 'opponent', 'team']]
@@ -239,7 +240,7 @@ def lose_by_year(l_opponents, l_years, l_lose, n_y, n_oppo):
   print(l_lose)
   print(n_y)
   print(n_oppo)
-list_of_years = ['2017','2018','2019','2020','2021','2022']
+list_of_years = ['2017','2018','2019','2020','2021']
 list_of_lose = []
 new_year = []
 new_team = []
@@ -256,7 +257,7 @@ df_2 = pd.DataFrame({
 df_2['Los'] = df_2.groupby(['Team'])['Losses'].cumsum()
 # %%
 textauto = True
-fig_3 = px.bar(df_2, x='Team', y='Los', color = 'Team', title = 'Cumulative Losses from 2017 to 2022', color_discrete_map = {
+fig_3 = px.bar(df_2, x='Team', y='Los', color = 'Team', title = 'Milan cumulative losses from season 2017/2018 to season 2021/2022', color_discrete_map = {
   'Juventus':'white', 
   'Napoli':'deepskyblue',
   'Inter':'blue',
@@ -325,3 +326,4 @@ fig.update_layout(xaxis_title="Teams", legend_title="Teams")
 st.write(fig)
 
 # %%
+
